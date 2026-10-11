@@ -28,6 +28,7 @@
 #define MEMORYPOOL_H
 
 #include <cstddef>
+#include <stdexcept>
 
 #define DEFAULT_BLOCK_SIZE 128
 
