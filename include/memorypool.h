@@ -67,7 +67,7 @@ private:
 /************************************************************************************/
 
 // Construct the pool with a block size and an initial block count.
-MemoryPool::MemoryPool(std::size_t blockSize, std::size_t initialBlocks){
+inline MemoryPool::MemoryPool(std::size_t blockSize, std::size_t initialBlocks){
     // Ensure each block can store the free-list links.
     if (blockSize < sizeof(Block)) {
         blockSize = sizeof(Block);
@@ -86,7 +86,7 @@ MemoryPool::MemoryPool(std::size_t blockSize, std::size_t initialBlocks){
     expandPool();
 }
 
-MemoryPool::~MemoryPool() {
+inline MemoryPool::~MemoryPool() {
     while (poolMemory) {
         Block* currentChunk = static_cast<Block*>(poolMemory);
         poolMemory = currentChunk->nextChunk;
@@ -94,7 +94,7 @@ MemoryPool::~MemoryPool() {
     }
 }
 
-void MemoryPool::expandPool() {
+inline void MemoryPool::expandPool() {
     // Allocate one metadata block plus the requested usable blocks.
     void* newMemory = operator new(blockSize * (totalBlocks + 1));
     // Use the first block to store the link to the next chunk.
@@ -122,7 +122,7 @@ void MemoryPool::expandPool() {
     freeList = newBlock->next;
 }
 
-void* MemoryPool::alloc() {
+inline void* MemoryPool::alloc() {
     if (!freeList) {
         // Add another chunk when no free blocks remain.
         expandPool();
@@ -133,7 +133,7 @@ void* MemoryPool::alloc() {
     return block;
 }
 
-void MemoryPool::dealloc(void* ptr) {
+inline void MemoryPool::dealloc(void* ptr) {
     if (!ptr) return; // Ignore null pointers.
     // Return the block to the head of the free list.
     Block* block = static_cast<Block*>(ptr);
